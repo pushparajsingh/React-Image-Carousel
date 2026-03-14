@@ -2,7 +2,9 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 0px;
   text-align: center;
+  padding-bottom: 0px;
 }
 
 .logo {
@@ -39,4 +41,112 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Carousel styles */
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0rem 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #111;
+  background: #fff;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.subtitle {
+  margin: 0.5rem auto 0;
+  max-width: 600px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.carousel {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+}
+
+.carouselImage {
+  width: 100%;
+  height: 370px;
+  display: block;
+  object-fit: cover;
+}
+
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 80%);
+  color: #fff;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.navButton {
+  border: 0;
+  padding: 0.75rem 1rem;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 1.25rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.navButton:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.dots {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.dot:hover {
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+  .navButton {
+    padding: 0.6rem 0.9rem;
+    font-size: 1.1rem;
+  }
 }

@@ -1,281 +1,89 @@
-import { useState, useTransition } from "react";
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import image1 from "./assets/image 1.png";
+import image2 from "./assets/image 2.png";
+import image3 from "./assets/image 3.png";
+import image4 from "./assets/image 4.png";
+import image5 from "./assets/image 5.png";
+import image6 from "./assets/image 6.png";
+import image7 from "./assets/image 7.png";
+import image8 from "./assets/image 8.png";
+import image9 from "./assets/image 9.png";
 
-export default function App() {
-  const [isPending, startTransition] = useTransition();
-  const [list, setList] = useState([]);
-  const [count, setCount] = useState(0); // Tracks how many times the load button was clicked
+const imageList = [
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  image6,
+  image7,
+  image8,
+  image9,
+];
 
-  const loadItems = () => {
-    setCount(prev => prev + 1);
-    
-    // Mark this expensive update as non-urgent
-    startTransition(() => {
-      // Simulate expensive data loading operation
-      const newList = Array.from({ length: 5000 }, (_, i) => ({
-        id: i,
-        text: `Item ${i + 1}`,
-        description: `Description for item ${i + 1}`,
-      }));
-      
-      setList(newList);
-    });
-  };
+const App = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (isHovered) return;
+
+    const timer = window.setTimeout(() => {
+      setCurrentIndex((x) => (x + 1) % imageList.length);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [currentIndex, isHovered]);
+
+  const goNext = () => setCurrentIndex((x) => (x + 1) % imageList.length);
+  const goPrev = () => setCurrentIndex((x) => (x - 1 + imageList.length) % imageList.length);
 
   return (
-    <div style={styles.root}>
-      <div style={styles.card}>
+    <div className="app">
+      <header className="header">
+        <h2 style={{ fontSize:"2rem", margin:"8px 0px"}}>React Image Carousel</h2>
+        <p className="subtitle">Hover the image to pause autoplay, or use the buttons/dots below.</p>
+      </header>
 
-        {/* Header */}
-        <div style={styles.badge}>useTransition</div>
-        <h1 style={styles.title}>Load Items on Click</h1>
-        <p style={styles.subtitle}>
-          Button stays responsive during <br/> expensive data loading
-        </p>
-
-        {/* Load Button */}
-        <button 
-          onClick={loadItems}
-          disabled={isPending}
-          style={{
-            ...styles.loadBtn,
-            opacity: isPending ? 0.6 : 1,
-            cursor: isPending ? "not-allowed" : "pointer"
-          }}
+      <div className="carousel">
+        <div
+          className="imageWrapper"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {isPending ? "⏳ Loading..." : "📦 Load 5,000 Items"}
-        </button>
-
-        {/* Stats */}
-        <div style={styles.statsBox}>
-          <div style={styles.statItem}>
-            <span style={styles.statLabel}>Loaded</span>
-            <span style={styles.statValue}>{list.length}</span>
-          </div>
-          <div style={styles.divider} />
-          <div style={styles.statItem}>
-            <span style={styles.statLabel}>Clicks</span>
-            <span style={styles.statValue}>{count}</span>
+          <img
+            className="carouselImage"
+            src={imageList[currentIndex]}
+            alt={`Slide ${currentIndex + 1}`}
+          />
+          <div className="caption">
+            Slide {currentIndex + 1} of {imageList.length}
           </div>
         </div>
 
-        {/* Status */}
-        <div style={styles.statusBox}>
-          <span style={styles.statusLabel}>Status:</span>
-          <span style={{
-            ...styles.statusValue,
-            color: isPending ? "#f59e0b" : "#10b981"
-          }}>
-            {isPending ? "⏳ Loading..." : list.length > 0 ? "✓ Loaded" : "⚪ Ready"}
-          </span>
+        <div className="controls">
+          <button className="navButton" onClick={goPrev} aria-label="Previous image">
+            ◀
+          </button>
+          <button className="navButton" onClick={goNext} aria-label="Next image">
+            ▶
+          </button>
         </div>
 
-        {/* Results */}
-        <div style={styles.resultsBox}>
-          <div style={styles.resultsHeader}>
-            Items Preview ({list.length} total)
-          </div>
-          <div style={styles.listContainer}>
-            {list.length === 0 ? (
-              <p style={styles.emptyState}>Click the button to load items</p>
-            ) : (
-              list.slice(0, 30).map(item => (
-                <div key={item.id} style={styles.listItem}>
-                  <div style={styles.itemText}>{item.text}</div>
-                  <div style={styles.itemDesc}>{item.description}</div>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="dots">
+          {imageList.map((_, idx) => (
+            <button
+              key={idx}
+              className={`dot ${idx === currentIndex ? "active" : ""}`}
+              onClick={() => setCurrentIndex(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
-
-        {/* Explanation */}
-        <div style={styles.codeBox}>
-          <p style={styles.codeLine}>
-            <span style={styles.codeKey}>isPending</span>
-            <span style={styles.codeEq}> = </span>
-            <span style={styles.codeVal}>{isPending.toString()}</span>
-          </p>
-          <p style={styles.codeLine}>
-            <span style={styles.codeComment}>// Button stays clickable!</span>
-          </p>
-        </div>
-
-        <p style={styles.note}>
-          💡 <strong>useTransition</strong> keeps UI responsive while loading heavy data!
-        </p>
       </div>
     </div>
   );
-}
-
-const styles = {
-  root: {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 100%)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "'Segoe UI', sans-serif",
-    padding: "2rem",
-  },
-  card: {
-    background: "#fff",
-    borderRadius: "24px",
-    padding: "2.5rem 2rem",
-    width: "420px",
-    textAlign: "center",
-    boxShadow: "0 20px 60px rgba(99,102,241,0.15)",
-  },
-  badge: {
-    display: "inline-block",
-    background: "#eef2ff",
-    color: "#6366f1",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    letterSpacing: "0.1em",
-    padding: "4px 14px",
-    borderRadius: "999px",
-    marginBottom: "1rem",
-  },
-  title: {
-    fontSize: "1.7rem",
-    fontWeight: 800,
-    color: "#1e1b4b",
-    margin: "0 0 0.4rem",
-  },
-  subtitle: {
-    color: "#94a3b8",
-    fontSize: "0.85rem",
-    lineHeight: 1.6,
-    marginBottom: "1.8rem",
-  },
-  loadBtn: {
-    width: "100%",
-    padding: "1rem",
-    fontSize: "1rem",
-    fontWeight: 700,
-    background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    marginBottom: "1.5rem",
-    transition: "transform 0.2s, opacity 0.2s",
-  },
-  statsBox: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "1.5rem",
-    background: "#f8fafc",
-    borderRadius: "12px",
-    padding: "1rem",
-    marginBottom: "1rem",
-  },
-  statItem: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "4px",
-  },
-  statLabel: {
-    fontSize: "0.7rem",
-    fontWeight: 700,
-    color: "#94a3b8",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-  },
-  statValue: {
-    fontSize: "1.8rem",
-    fontWeight: 800,
-    color: "#6366f1",
-  },
-  divider: {
-    width: "1px",
-    height: "40px",
-    background: "#e2e8f0",
-  },
-  statusBox: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "0.5rem",
-    padding: "0.8rem",
-    background: "#f8fafc",
-    borderRadius: "10px",
-    marginBottom: "1.5rem",
-  },
-  statusLabel: {
-    fontSize: "0.85rem",
-    fontWeight: 600,
-    color: "#64748b",
-  },
-  statusValue: {
-    fontSize: "0.85rem",
-    fontWeight: 700,
-  },
-  resultsBox: {
-    background: "#f8fafc",
-    borderRadius: "16px",
-    padding: "1rem",
-    marginBottom: "1.5rem",
-    textAlign: "left",
-  },
-  resultsHeader: {
-    fontSize: "0.8rem",
-    fontWeight: 700,
-    color: "#6366f1",
-    marginBottom: "0.8rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-  },
-  listContainer: {
-    maxHeight: "220px",
-    overflowY: "auto",
-    background: "#fff",
-    borderRadius: "10px",
-    padding: "0.5rem",
-  },
-  listItem: {
-    padding: "0.7rem 0.8rem",
-    borderBottom: "1px solid #f1f5f9",
-  },
-  itemText: {
-    fontSize: "0.85rem",
-    fontWeight: 600,
-    color: "#334155",
-    marginBottom: "2px",
-  },
-  itemDesc: {
-    fontSize: "0.75rem",
-    color: "#94a3b8",
-  },
-  emptyState: {
-    padding: "2rem 1rem",
-    color: "#94a3b8",
-    fontSize: "0.85rem",
-    textAlign: "center",
-    margin: 0,
-  },
-  codeBox: {
-    background: "#0f172a",
-    borderRadius: "12px",
-    padding: "1rem 1.2rem",
-    textAlign: "left",
-    marginBottom: "1.2rem",
-  },
-  codeLine: {
-    margin: "4px 0",
-    fontSize: "0.82rem",
-    fontFamily: "monospace",
-  },
-  codeKey: { color: "#7dd3fc" },
-  codeEq: { color: "#f8fafc" },
-  codeVal: { color: "#86efac" },
-  codeComment: { color: "#64748b" },
-  note: {
-    fontSize: "0.8rem",
-    color: "#64748b",
-    margin: 0,
-    lineHeight: 1.6,
-  },
 };
+
+export default App;
