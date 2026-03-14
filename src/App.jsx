@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import image1 from "./assets/image 1.png";
-import image2 from "./assets/image 2.png";
-import image3 from "./assets/image 3.png";
-import image4 from "./assets/image 4.png";
-import image5 from "./assets/image 5.png";
-import image6 from "./assets/image 6.png";
-import image7 from "./assets/image 7.png";
-import image8 from "./assets/image 8.png";
-import image9 from "./assets/image 9.png";
+import image1 from "./assets/image 1.jpg";
+import image2 from "./assets/image 2.jpg";
+import image3 from "./assets/image 3.jpg";
+import image4 from "./assets/image 4.jpg";
+import image5 from "./assets/image 5.jpg";
+import image6 from "./assets/image 6.jpg";
+import image7 from "./assets/image 7.jpg";
+import image8 from "./assets/image 8.jpg";
+import image9 from "./assets/image 9.jpg";
+import image10 from "./assets/image 10.jpg";
 
 const imageList = [
   image1,
@@ -20,6 +21,7 @@ const imageList = [
   image7,
   image8,
   image9,
+  image10
 ];
 
 const App = () => {
